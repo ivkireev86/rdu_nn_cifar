@@ -25,6 +25,10 @@ def load_data():
 
 def validation(model, x_train, y_train, x_test, y_test,
                batch_size=BATCH_SIZE, epochs=NUM_EPOCHS):
+    print("Model: ")
+    loss, acc = model.evaluate(x_test, y_test, verbose=0)  # Evaluate the trained model on the test set!
+    print(loss, acc)
+
     model.fit(x_train, y_train,
               batch_size=batch_size,
               epochs=epochs,
