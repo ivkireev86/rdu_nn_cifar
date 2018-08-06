@@ -33,14 +33,13 @@ class BaseModel(Model):
 
 class SmallModel(Sequential):
     def __init__(self, height, width, depth, num_classes, hidden_size):
-        inp_layers = [Input(shape=(height, width, depth))]
         out_layers = [
-            Flatten(),
+            Flatten(input_shape=(height, width, depth)),
             Dense(hidden_size, activation='relu'),
             Dense(num_classes, activation='softmax')
         ]
 
-        super().__init__(inp_layers + out_layers)
+        super().__init__(out_layers)
         self.compile(loss='categorical_crossentropy',  # using the cross-entropy loss function
                      optimizer='adam',  # using the Adam optimiser
                      metrics=['accuracy'])  # reporting the accuracy
