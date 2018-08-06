@@ -1,7 +1,7 @@
 """Разные модели
 """
 from keras.layers import Input, Conv2D, MaxPooling2D, Dense, Dropout, Flatten
-from keras.models import Model  # basic class for specifying and training a neural network
+from keras.models import Model, Sequential # basic class for specifying and training a neural network
 
 
 class BaseModel(Model):
@@ -26,6 +26,21 @@ class BaseModel(Model):
         out = Dense(num_classes, activation='softmax')(drop_3)
 
         super().__init__(inputs=inp, outputs=out)  # To define a model, just specify its input and output layers
+        self.compile(loss='categorical_crossentropy',  # using the cross-entropy loss function
+                     optimizer='adam',  # using the Adam optimiser
+                     metrics=['accuracy'])  # reporting the accuracy
+
+
+class SmallModel(Sequential):
+    def __init__(self, height, width, depth, num_classes, hidden_size):
+        inp_layers = [Input(shape=(height, width, depth))]
+        out_layers = [
+            Flatten(),
+            Dense(hidden_size, activation='relu'),
+            Dense(num_classes, activation='softmax')
+        ]
+
+        super().__init__(inp_layers + out_layers)
         self.compile(loss='categorical_crossentropy',  # using the cross-entropy loss function
                      optimizer='adam',  # using the Adam optimiser
                      metrics=['accuracy'])  # reporting the accuracy
