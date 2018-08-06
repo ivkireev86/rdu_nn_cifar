@@ -5,7 +5,7 @@ from keras.models import Model  # basic class for specifying and training a neur
 
 
 class BaseModel(Model):
-    def __init__(self, depth, height, width, num_classes,
+    def __init__(self, height, width, depth, num_classes,
                  conv_depth_1=32, conv_depth_2=64, kernel_size=3, pool_size=2,
                  drop_prob_1=0.25, drop_prob_2=0.5, hidden_size=512):
         inp = Input(shape=(height, width, depth))
