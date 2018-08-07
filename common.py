@@ -43,7 +43,7 @@ def validation(model, x_train, y_train, x_test, y_test,
 def compare_models(models, x_train, y_train, x_test, y_test, start_from=0):
     i = 0
     res = []
-    for model in models.items():
+    for model in models:
         if i < start_from:
             continue
         loss, acc = validation(model, x_train, y_train, x_test, y_test, verbose=0)
