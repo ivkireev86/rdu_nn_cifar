@@ -86,7 +86,8 @@ class VggLikeModel(Model):
     def get_conv(inp_layer, conv_count=2, filters=16, kernel_size=3, activation=None, dropout_rate=0.25):
         out_layer = inp_layer
         for _ in range(conv_count):
-            out_layer = Conv2D(filters=filters, kernel_size=kernel_size, activation=activation)(out_layer)
+            out_layer = Conv2D(filters=filters, kernel_size=kernel_size,
+                               activation=activation, padding='same')(out_layer)
         out_layer = MaxPooling2D(padding='same')(out_layer)
         out_layer = Dropout(rate=dropout_rate)(out_layer)
         return out_layer
@@ -124,11 +125,35 @@ def get_all_models(height, width, depth, num_classes):
         VggLikeModel(height, width, depth, num_classes, conv_params=[
             {'conv_count': 2, 'filters': 16, 'activation': None, 'dropout_rate': 0.25},
         ], dense_size=[256, 32], dense_dropout_rate=0.5),
+        ###
+        VggLikeModel(height, width, depth, num_classes, conv_params=[
+            {'conv_count': 2, 'filters': 16, 'activation': None, 'dropout_rate': 0.4},  # 32-16
+        ], dense_size=[128], dense_dropout_rate=0.5),
+        VggLikeModel(height, width, depth, num_classes, conv_params=[
+            {'conv_count': 2, 'filters': 16, 'activation': None, 'dropout_rate': 0.4},  # 32-16-8
+            {'conv_count': 2, 'filters': 32, 'activation': None, 'dropout_rate': 0.4},
+        ], dense_size=[128], dense_dropout_rate=0.5),
+        VggLikeModel(height, width, depth, num_classes, conv_params=[
+            {'conv_count': 2, 'filters': 16, 'activation': None, 'dropout_rate': 0.4},  # 32-16-8-4
+            {'conv_count': 2, 'filters': 32, 'activation': None, 'dropout_rate': 0.4},
+            {'conv_count': 2, 'filters': 64, 'activation': None, 'dropout_rate': 0.4},
+        ], dense_size=[128], dense_dropout_rate=0.5),
+        VggLikeModel(height, width, depth, num_classes, conv_params=[
+            {'conv_count': 2, 'filters': 16, 'activation': None, 'dropout_rate': 0.4},  # 32-16-8-4
+            {'conv_count': 2, 'filters': 32, 'activation': None, 'dropout_rate': 0.4},
+            {'conv_count': 2, 'filters': 64, 'activation': None, 'dropout_rate': 0.4},
+        ], dense_size=[512], dense_dropout_rate=0.5),
+        VggLikeModel(height, width, depth, num_classes, conv_params=[
+            {'conv_count': 2, 'filters': 16, 'activation': None, 'dropout_rate': 0.4},  # 32-16-8-4-2
+            {'conv_count': 2, 'filters': 32, 'activation': None, 'dropout_rate': 0.4},
+            {'conv_count': 2, 'filters': 64, 'activation': None, 'dropout_rate': 0.4},
+            {'conv_count': 1, 'filters': 96, 'activation': None, 'dropout_rate': 0.6},
+        ], dense_size=[128], dense_dropout_rate=0.5),
     ]
 
 
 if __name__ == '__main__':
     models = get_all_models(32, 32, 3, 10)
-    for model in models:
-        print(model.name)
+    for i, model in enumerate(models):
+        print(i, model.name)
     print('test ok')
