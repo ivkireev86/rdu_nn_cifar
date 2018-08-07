@@ -6,7 +6,20 @@ from keras.layers import Input, Conv2D, MaxPooling2D, Dense, Dropout, Flatten
 from keras.models import Model, Sequential  # basic class for specifying and training a neural network
 
 
+def auto_naming(func):
+    def wrapper(self, *args, **kwargs):
+        func(self, *args, **kwargs)
+
+        name = str(type(self))
+        for k, v in sorted(kwargs.items()):
+            name += " {}={}".format(k, v)
+        self.name = name
+
+    return wrapper
+
+
 class BaseModel(Model):
+    @auto_naming
     def __init__(self, height, width, depth, num_classes,
                  conv_depth_1=32, conv_depth_2=64, kernel_size=3, pool_size=2,
                  drop_prob_1=0.25, drop_prob_2=0.5, hidden_size=512):
@@ -34,6 +47,7 @@ class BaseModel(Model):
 
 
 class SmallModel(Sequential):
+    @auto_naming
     def __init__(self, height, width, depth, num_classes, hidden_size):
         out_layers = [
             Flatten(input_shape=(height, width, depth)),
@@ -48,6 +62,7 @@ class SmallModel(Sequential):
 
 
 class VggLikeModel(Model):
+    @auto_naming
     def __init__(self, height, width, depth, num_classes,
                  conv_params, dense_size, dense_dropout_rate):
         inp_layer = Input(shape=(height, width, depth))
@@ -78,40 +93,42 @@ class VggLikeModel(Model):
 
 
 def get_all_models(height, width, depth, num_classes):
-    return OrderedDict([
-        ('base_model', BaseModel(height, width, depth, num_classes)),
-        ('small_model-512', SmallModel(height, width, depth, num_classes, hidden_size=512)),
-        ('small_model-128', SmallModel(height, width, depth, num_classes, hidden_size=128)),
-        ('vgg_like 1-16-None-25 128', VggLikeModel(height, width, depth, num_classes, [
+    return [
+        BaseModel(height, width, depth, num_classes),
+        SmallModel(height, width, depth, num_classes, hidden_size=512),
+        SmallModel(height, width, depth, num_classes, hidden_size=128),
+        VggLikeModel(height, width, depth, num_classes, conv_params=[
             {'conv_count': 1, 'filters': 16, 'activation': None, 'dropout_rate': 0.25},
-        ], dense_size=[128], dense_dropout_rate=0.5)),
-        ('vgg_like 2-16-None-25 128', VggLikeModel(height, width, depth, num_classes, [
+        ], dense_size=[128], dense_dropout_rate=0.5),
+        VggLikeModel(height, width, depth, num_classes, conv_params=[
             {'conv_count': 2, 'filters': 16, 'activation': None, 'dropout_rate': 0.25},
-        ], dense_size=[128], dense_dropout_rate=0.5)),
-        ('vgg_like 2-32-None-25 128', VggLikeModel(height, width, depth, num_classes, [
+        ], dense_size=[128], dense_dropout_rate=0.5),
+        VggLikeModel(height, width, depth, num_classes, conv_params=[
             {'conv_count': 2, 'filters': 32, 'activation': None, 'dropout_rate': 0.25},
-        ], dense_size=[128], dense_dropout_rate=0.5)),
-        ('vgg_like 3-16-None-25 128', VggLikeModel(height, width, depth, num_classes, [
+        ], dense_size=[128], dense_dropout_rate=0.5),
+        VggLikeModel(height, width, depth, num_classes, conv_params=[
             {'conv_count': 3, 'filters': 16, 'activation': None, 'dropout_rate': 0.25},
-        ], dense_size=[128], dense_dropout_rate=0.5)),
-        ('vgg_like 2-16-None-50 128', VggLikeModel(height, width, depth, num_classes, [
+        ], dense_size=[128], dense_dropout_rate=0.5),
+        VggLikeModel(height, width, depth, num_classes, conv_params=[
             {'conv_count': 2, 'filters': 16, 'activation': None, 'dropout_rate': 0.50},
-        ], dense_size=[128], dense_dropout_rate=0.5)),
-        ('vgg_like 2-16-None-25 512', VggLikeModel(height, width, depth, num_classes, [
+        ], dense_size=[128], dense_dropout_rate=0.5),
+        VggLikeModel(height, width, depth, num_classes, conv_params=[
             {'conv_count': 2, 'filters': 16, 'activation': None, 'dropout_rate': 0.25},
-        ], dense_size=[512], dense_dropout_rate=0.5)),
-        ('vgg_like 2-16-None-25 None', VggLikeModel(height, width, depth, num_classes, [
+        ], dense_size=[512], dense_dropout_rate=0.5),
+        VggLikeModel(height, width, depth, num_classes, conv_params=[
             {'conv_count': 2, 'filters': 16, 'activation': None, 'dropout_rate': 0.25},
-        ], dense_size=[], dense_dropout_rate=0.5)),
-        ('vgg_like 2-16-None-25 256', VggLikeModel(height, width, depth, num_classes, [
+        ], dense_size=[], dense_dropout_rate=0.5),
+        VggLikeModel(height, width, depth, num_classes, conv_params=[
             {'conv_count': 2, 'filters': 16, 'activation': None, 'dropout_rate': 0.25},
-        ], dense_size=[256], dense_dropout_rate=0.5)),
-        ('vgg_like 2-16-None-25 256-32', VggLikeModel(height, width, depth, num_classes, [
+        ], dense_size=[256], dense_dropout_rate=0.5),
+        VggLikeModel(height, width, depth, num_classes, conv_params=[
             {'conv_count': 2, 'filters': 16, 'activation': None, 'dropout_rate': 0.25},
-        ], dense_size=[256, 32], dense_dropout_rate=0.5)),
-    ])
+        ], dense_size=[256, 32], dense_dropout_rate=0.5),
+    ]
 
 
 if __name__ == '__main__':
-    model = get_all_models(32, 32, 3, 10)
+    models = get_all_models(32, 32, 3, 10)
+    for model in models:
+        print(model.name)
     print('test ok')
