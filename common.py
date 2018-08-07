@@ -24,7 +24,7 @@ def load_data():
 
 
 def validation(model, x_train, y_train, x_test, y_test,
-               batch_size=BATCH_SIZE, epochs=NUM_EPOCHS):
+               batch_size=BATCH_SIZE, epochs=NUM_EPOCHS, verbose=2):
     print("Model: ")
     loss, acc = model.evaluate(x_test, y_test, verbose=0)  # Evaluate the trained model on the test set!
     print(loss, acc)
@@ -32,8 +32,18 @@ def validation(model, x_train, y_train, x_test, y_test,
     model.fit(x_train, y_train,
               batch_size=batch_size,
               epochs=epochs,
-              verbose=2,
+              verbose=verbose,
               validation_split=0.1)
 
     loss, acc = model.evaluate(x_test, y_test, verbose=0)  # Evaluate the trained model on the test set!
     return loss, acc
+
+
+def compare_models(models, x_train, y_train, x_test, y_test):
+    res = []
+    for name, model in models.items():
+        loss, acc = validation(model, x_train, y_train, x_test, y_test, verbose=0)
+        print(loss, acc, name)
+        res.append((loss, acc, name))
+    return res
+

@@ -1,5 +1,7 @@
 """Разные модели
 """
+from collections import OrderedDict
+
 from keras.layers import Input, Conv2D, MaxPooling2D, Dense, Dropout, Flatten
 from keras.models import Model, Sequential # basic class for specifying and training a neural network
 
@@ -43,3 +45,16 @@ class SmallModel(Sequential):
         self.compile(loss='categorical_crossentropy',  # using the cross-entropy loss function
                      optimizer='adam',  # using the Adam optimiser
                      metrics=['accuracy'])  # reporting the accuracy
+
+
+def get_all_models(height, width, depth, num_classes):
+    return OrderedDict([
+        ('base_model', BaseModel(height, width, depth, num_classes)),
+        ('small_model-512', SmallModel(height, width, depth, num_classes, hidden_size=512)),
+        ('small_model-128', SmallModel(height, width, depth, num_classes, hidden_size=128)),
+    ])
+
+
+if __name__ == '__main__':
+    model = get_all_models(32, 32, 3, 10)
+    print('test ok')
