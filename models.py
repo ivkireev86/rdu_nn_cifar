@@ -208,6 +208,11 @@ def get_all_models(height, width, depth, num_classes):
         ], dense_size=[512+256], dense_dropout_rate=0.5),
 
         ### 20 + 'kernel_regularizer': regularizers.l2(0.1)
+        VggLikeModel(height, width, depth, num_classes, conv_params=[  # 20 + kernel_regularizer
+            {'conv_count': 2, 'filters': 16, 'activation': 'tanh', 'dropout_rate': 0.4, 'kernel_regularizer': regularizers.l2(0.001)},  # 32-16-8-4
+            {'conv_count': 2, 'filters': 32, 'activation': 'tanh', 'dropout_rate': 0.4, 'kernel_regularizer': regularizers.l2(0.001)},
+            {'conv_count': 2, 'filters': 64, 'activation': 'tanh', 'dropout_rate': 0.4, 'kernel_regularizer': regularizers.l2(0.001)},
+        ], dense_size=[512], dense_dropout_rate=0.5),
         VggLikeModel(height, width, depth, num_classes, conv_params=[
             {'conv_count': 3, 'filters': 16, 'activation': 'tanh', 'dropout_rate': 0.4, 'kernel_regularizer': regularizers.l2(0.001)},  # 32-16-8-4
             {'conv_count': 3, 'filters': 32, 'activation': 'tanh', 'dropout_rate': 0.4, 'kernel_regularizer': regularizers.l2(0.001)},
