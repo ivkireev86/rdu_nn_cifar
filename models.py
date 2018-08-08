@@ -174,6 +174,38 @@ def get_all_models(height, width, depth, num_classes):
             {'conv_count': 2, 'filters': 64, 'activation': 'tanh', 'dropout_rate': 0.4},
             {'conv_count': 1, 'filters': 96, 'activation': 'tanh', 'dropout_rate': 0.6},
         ], dense_size=[128], dense_dropout_rate=0.5),
+        ###
+        VggLikeModel(height, width, depth, num_classes, conv_params=[
+            {'conv_count': 3, 'filters': 16, 'activation': 'tanh', 'dropout_rate': 0.4},  # 32-16-8-4
+            {'conv_count': 3, 'filters': 32, 'activation': 'tanh', 'dropout_rate': 0.4},
+            {'conv_count': 3, 'filters': 64, 'activation': 'tanh', 'dropout_rate': 0.4},
+        ], dense_size=[512], dense_dropout_rate=0.5),
+        VggLikeModel(height, width, depth, num_classes, conv_params=[
+            {'conv_count': 2, 'filters': 32, 'activation': 'tanh', 'dropout_rate': 0.4},  # 32-16-8-4
+            {'conv_count': 2, 'filters': 64, 'activation': 'tanh', 'dropout_rate': 0.4},
+            {'conv_count': 2, 'filters': 128, 'activation': 'tanh', 'dropout_rate': 0.4},
+        ], dense_size=[512], dense_dropout_rate=0.5),
+        VggLikeModel(height, width, depth, num_classes, conv_params=[
+            {'conv_count': 2, 'filters': 16, 'activation': 'relu', 'dropout_rate': 0.4},  # 32-16-8-4
+            {'conv_count': 2, 'filters': 32, 'activation': 'relu', 'dropout_rate': 0.4},
+            {'conv_count': 2, 'filters': 64, 'activation': 'relu', 'dropout_rate': 0.4},
+        ], dense_size=[512], dense_dropout_rate=0.5),
+        VggLikeModel(height, width, depth, num_classes, conv_params=[
+            {'conv_count': 2, 'filters': 16, 'activation': 'tanh', 'dropout_rate': 0.7},  # 32-16-8-4
+            {'conv_count': 2, 'filters': 32, 'activation': 'tanh', 'dropout_rate': 0.7},
+            {'conv_count': 2, 'filters': 64, 'activation': 'tanh', 'dropout_rate': 0.7},
+        ], dense_size=[512], dense_dropout_rate=0.5),
+        VggLikeModel(height, width, depth, num_classes, conv_params=[
+            {'conv_count': 2, 'filters': 16, 'activation': 'tanh', 'dropout_rate': 0.4},  # 32-16-8-4
+            {'conv_count': 2, 'filters': 32, 'activation': 'tanh', 'dropout_rate': 0.4},
+            {'conv_count': 2, 'filters': 64, 'activation': 'tanh', 'dropout_rate': 0.4},
+        ], dense_size=[512, 128], dense_dropout_rate=0.5),
+        VggLikeModel(height, width, depth, num_classes, conv_params=[
+            {'conv_count': 2, 'filters': 16, 'activation': 'tanh', 'dropout_rate': 0.4},  # 32-16-8-4
+            {'conv_count': 2, 'filters': 32, 'activation': 'tanh', 'dropout_rate': 0.4},
+            {'conv_count': 2, 'filters': 64, 'activation': 'tanh', 'dropout_rate': 0.4},
+        ], dense_size=[512+256], dense_dropout_rate=0.5),
+
     ]
 
 
