@@ -48,4 +48,5 @@ def compare_models(models, x_train, y_train, x_test, y_test, start_from=0):
         loss, acc = validation(model, x_train, y_train, x_test, y_test, verbose=0)
         print("{:4d}   {:.6f}   {:.6f}   {}".format(i, loss, acc, model.name))
         res.append((loss, acc, model.name))
+    print('')
     return res
