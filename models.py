@@ -1,10 +1,9 @@
 """Разные модели
 """
-from collections import OrderedDict
 
 from keras.layers import Input, Conv2D, MaxPooling2D, Dense, Dropout, Flatten, Activation
 from keras.models import Model, Sequential  # basic class for specifying and training a neural network
-
+from keras import regularizers
 
 def auto_naming(func):
     def wrapper(self, *args, **kwargs):
@@ -83,10 +82,12 @@ class VggLikeModel(Model):
                      metrics=['accuracy'])  # reporting the accuracy
 
     @staticmethod
-    def get_conv(inp_layer, conv_count=2, filters=16, kernel_size=3, activation=None, dropout_rate=0.25):
+    def get_conv(inp_layer, conv_count=2, filters=16, kernel_size=3, activation=None, dropout_rate=0.25,
+                 kernel_regularizer=None):
         out_layer = inp_layer
         for _ in range(conv_count):
-            out_layer = Conv2D(filters=filters, kernel_size=kernel_size, padding='same')(out_layer)
+            out_layer = Conv2D(filters=filters, kernel_size=kernel_size, padding='same',
+                               kernel_regularizer=kernel_regularizer)(out_layer)
         out_layer = MaxPooling2D(padding='same')(out_layer)
         if activation:
             out_layer = Activation(activation)(out_layer)
@@ -163,7 +164,7 @@ def get_all_models(height, width, depth, num_classes):
             {'conv_count': 2, 'filters': 32, 'activation': 'tanh', 'dropout_rate': 0.4},
             {'conv_count': 2, 'filters': 64, 'activation': 'tanh', 'dropout_rate': 0.4},
         ], dense_size=[128], dense_dropout_rate=0.5),
-        VggLikeModel(height, width, depth, num_classes, conv_params=[
+        VggLikeModel(height, width, depth, num_classes, conv_params=[  # 20
             {'conv_count': 2, 'filters': 16, 'activation': 'tanh', 'dropout_rate': 0.4},  # 32-16-8-4
             {'conv_count': 2, 'filters': 32, 'activation': 'tanh', 'dropout_rate': 0.4},
             {'conv_count': 2, 'filters': 64, 'activation': 'tanh', 'dropout_rate': 0.4},
@@ -174,7 +175,7 @@ def get_all_models(height, width, depth, num_classes):
             {'conv_count': 2, 'filters': 64, 'activation': 'tanh', 'dropout_rate': 0.4},
             {'conv_count': 1, 'filters': 96, 'activation': 'tanh', 'dropout_rate': 0.6},
         ], dense_size=[128], dense_dropout_rate=0.5),
-        ###
+        ### 20 +
         VggLikeModel(height, width, depth, num_classes, conv_params=[
             {'conv_count': 3, 'filters': 16, 'activation': 'tanh', 'dropout_rate': 0.4},  # 32-16-8-4
             {'conv_count': 3, 'filters': 32, 'activation': 'tanh', 'dropout_rate': 0.4},
@@ -206,6 +207,37 @@ def get_all_models(height, width, depth, num_classes):
             {'conv_count': 2, 'filters': 64, 'activation': 'tanh', 'dropout_rate': 0.4},
         ], dense_size=[512+256], dense_dropout_rate=0.5),
 
+        ### 20 + 'kernel_regularizer': regularizers.l2(0.1)
+        VggLikeModel(height, width, depth, num_classes, conv_params=[
+            {'conv_count': 3, 'filters': 16, 'activation': 'tanh', 'dropout_rate': 0.4, 'kernel_regularizer': regularizers.l2(0.1)},  # 32-16-8-4
+            {'conv_count': 3, 'filters': 32, 'activation': 'tanh', 'dropout_rate': 0.4, 'kernel_regularizer': regularizers.l2(0.1)},
+            {'conv_count': 3, 'filters': 64, 'activation': 'tanh', 'dropout_rate': 0.4, 'kernel_regularizer': regularizers.l2(0.1)},
+        ], dense_size=[512], dense_dropout_rate=0.5),
+        VggLikeModel(height, width, depth, num_classes, conv_params=[
+            {'conv_count': 2, 'filters': 32, 'activation': 'tanh', 'dropout_rate': 0.4, 'kernel_regularizer': regularizers.l2(0.1)},  # 32-16-8-4
+            {'conv_count': 2, 'filters': 64, 'activation': 'tanh', 'dropout_rate': 0.4, 'kernel_regularizer': regularizers.l2(0.1)},
+            {'conv_count': 2, 'filters': 128, 'activation': 'tanh', 'dropout_rate': 0.4, 'kernel_regularizer': regularizers.l2(0.1)},
+        ], dense_size=[512], dense_dropout_rate=0.5),
+        VggLikeModel(height, width, depth, num_classes, conv_params=[
+            {'conv_count': 2, 'filters': 16, 'activation': 'relu', 'dropout_rate': 0.4, 'kernel_regularizer': regularizers.l2(0.1)},  # 32-16-8-4
+            {'conv_count': 2, 'filters': 32, 'activation': 'relu', 'dropout_rate': 0.4, 'kernel_regularizer': regularizers.l2(0.1)},
+            {'conv_count': 2, 'filters': 64, 'activation': 'relu', 'dropout_rate': 0.4, 'kernel_regularizer': regularizers.l2(0.1)},
+        ], dense_size=[512], dense_dropout_rate=0.5),
+        VggLikeModel(height, width, depth, num_classes, conv_params=[
+            {'conv_count': 2, 'filters': 16, 'activation': 'tanh', 'dropout_rate': 0.7, 'kernel_regularizer': regularizers.l2(0.1)},  # 32-16-8-4
+            {'conv_count': 2, 'filters': 32, 'activation': 'tanh', 'dropout_rate': 0.7, 'kernel_regularizer': regularizers.l2(0.1)},
+            {'conv_count': 2, 'filters': 64, 'activation': 'tanh', 'dropout_rate': 0.7, 'kernel_regularizer': regularizers.l2(0.1)},
+        ], dense_size=[512], dense_dropout_rate=0.5),
+        VggLikeModel(height, width, depth, num_classes, conv_params=[
+            {'conv_count': 2, 'filters': 16, 'activation': 'tanh', 'dropout_rate': 0.4, 'kernel_regularizer': regularizers.l2(0.1)},  # 32-16-8-4
+            {'conv_count': 2, 'filters': 32, 'activation': 'tanh', 'dropout_rate': 0.4, 'kernel_regularizer': regularizers.l2(0.1)},
+            {'conv_count': 2, 'filters': 64, 'activation': 'tanh', 'dropout_rate': 0.4, 'kernel_regularizer': regularizers.l2(0.1)},
+        ], dense_size=[512, 128], dense_dropout_rate=0.5),
+        VggLikeModel(height, width, depth, num_classes, conv_params=[
+            {'conv_count': 2, 'filters': 16, 'activation': 'tanh', 'dropout_rate': 0.4, 'kernel_regularizer': regularizers.l2(0.1)},  # 32-16-8-4
+            {'conv_count': 2, 'filters': 32, 'activation': 'tanh', 'dropout_rate': 0.4, 'kernel_regularizer': regularizers.l2(0.1)},
+            {'conv_count': 2, 'filters': 64, 'activation': 'tanh', 'dropout_rate': 0.4, 'kernel_regularizer': regularizers.l2(0.1)},
+        ], dense_size=[512+256], dense_dropout_rate=0.5),
     ]
 
 
