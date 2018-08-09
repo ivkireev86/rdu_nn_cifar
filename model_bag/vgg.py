@@ -126,3 +126,7 @@ class Vgg16(Sequential):
         self.add(Dropout(0.5))
         self.add(Dense(num_classes))
         self.add(Activation('softmax'))
+
+        self.compile(loss='categorical_crossentropy',  # using the cross-entropy loss function
+                     optimizer='adam',  # using the Adam optimiser
+                     metrics=['accuracy'])  # reporting the accuracy
