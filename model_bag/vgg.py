@@ -1,3 +1,6 @@
+"""
+https://github.com/geifmany/cifar-vgg/blob/master/cifar10vgg.py
+"""
 from keras import Model, Input, Sequential, regularizers
 from keras.layers import Flatten, Dense, Dropout, Conv2D, MaxPooling2D, Activation, BatchNormalization
 from keras import optimizers
