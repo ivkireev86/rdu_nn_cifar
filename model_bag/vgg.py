@@ -1,5 +1,6 @@
 from keras import Model, Input, Sequential, regularizers
 from keras.layers import Flatten, Dense, Dropout, Conv2D, MaxPooling2D, Activation, BatchNormalization
+from keras import optimizers
 
 from model_bag.core import auto_naming
 
@@ -127,6 +128,8 @@ class Vgg16(Sequential):
         self.add(Dense(num_classes))
         self.add(Activation('softmax'))
 
-        self.compile(loss='categorical_crossentropy',  # using the cross-entropy loss function
-                     optimizer='adam',  # using the Adam optimiser
-                     metrics=['accuracy'])  # reporting the accuracy
+        lr_decay = 1e-6
+        learning_rate = 0.1
+        sgd = optimizers.SGD(lr=learning_rate, decay=lr_decay, momentum=0.9, nesterov=True)
+        self.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
+
